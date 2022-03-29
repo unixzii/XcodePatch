@@ -49,6 +49,10 @@ Since you just modified the executable file of Xcode, you need to re-sign the bu
 * Make this repository a universal patch collection for Xcode.
 * A easy-to-use re-signing tool.
 
+## Known Issues
+
+* Re-signing Xcode will make Apple Developer accounts integration unable to work (as well as "Automatically manage signing").
+
 ## Disclaimer
 
 During your operations, Xcode can be broken and cannot be opened anymore. This is irrelevant to this repository. Please don't install this patch when you are urgent about doing your serious work or something.
