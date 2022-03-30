@@ -20,6 +20,9 @@ Launch Xcode and try attaching it via LLDB. If it succeeded, everything is ok an
 Open `XcodePatch.xcodeproj` and click the build button. Grab the produced `libXcodePatch.dylib` file and copy it to `/usr/local/lib`.
 
 ### 4. Inject the Patch
+
+> Before modifying the executable file, consider backing it up first in case there are something unexpected happened and broke the executable. (Backing up only the main executable file is enough)
+
 Now you need to make Xcode load the patch library. Here I will use Python with [LIEF](https://lief-project.github.io/) library.
 
 If you haven't installed LIEF:
@@ -33,7 +36,8 @@ then execute the following script:
 ```python
 import lief
 
-xcode = lief.parse("/path/to/Xcode.app/Contents/MacOS/Xcode")
+xcode_fat = lief.MachO.parse("/path/to/Xcode.app/Contents/MacOS/Xcode")
+xcode = xcode_fat.take(lief.MachO.CPU_TYPES.ARM64) # or `x86_64` for Intel-based Mac
 
 patch_lib = lief.MachO.DylibCommand.weak_lib('/usr/local/lib/libXcodePatch.dylib')
 xcode.add(patch_lib)
