@@ -35,14 +35,20 @@ then execute the following script:
 
 ```python
 import lief
+import shutil
 
-xcode_fat = lief.MachO.parse("/path/to/Xcode.app/Contents/MacOS/Xcode")
+xcode_path = "/path/to/Xcode.app/Contents/MacOS/Xcode"
+
+# backup the executable file
+shutil.copyfile(xcode_path, f"{xcode_path}.bak")
+
+xcode_fat = lief.MachO.parse(xcode_path)
 xcode = xcode_fat.take(lief.MachO.CPU_TYPES.ARM64) # or `x86_64` for Intel-based Mac
 
 patch_lib = lief.MachO.DylibCommand.weak_lib('/usr/local/lib/libXcodePatch.dylib')
 xcode.add(patch_lib)
 
-xcode.write("/path/to/Xcode.app/Contents/MacOS/Xcode")
+xcode.write(xcode_path)
 ```
 
 ### 5. Re-sign Xcode Again
